@@ -54,6 +54,9 @@ app.use(bodyParser.json())
 app.use(cors())
 app.use(express.static('./dist'))
 
+const helmet = require('helmet')
+app.use(helmet())
+
 const port = process.env.PORT ||  3000; //8080;
 
 app.get('/', (req, res) => {
