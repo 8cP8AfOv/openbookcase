@@ -36,18 +36,18 @@ const pg = new Client({
 
 pg.connect();
 
-/*
+
 pg.query('SELECT * from users;', (err, result) => {
     if (err) throw err;
-    	//r = JSON.stringify(result.rows[0]);
-      r = result.rows;
+    	r = JSON.stringify(result.rows[0]);
+      //r = result.rows;
 		console.log(r)
     	pg.end();
 });
-*/
+
 
 // 現在時刻を取得
-
+/*
 pg.query('SELECT NOW()', (err, res) => {
   if (err) throw err;
   for (let row of res.rows) {
@@ -56,6 +56,7 @@ pg.query('SELECT NOW()', (err, res) => {
   // 接続終了
   pg.end();
 });
+*/
 
 //--------------------------------------------------------------------------
 
@@ -78,6 +79,10 @@ const port = process.env.PORT ||  3000; //8080;
 
 var users = require('./routes/users');
 app.use('/users', users);
+
+app.use('/testdb', (req, res) => {
+  res.send(r);
+});
 
 app.get('/', (req, res) => {
 	res.send('Hello World !!' );
