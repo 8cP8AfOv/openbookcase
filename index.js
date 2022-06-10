@@ -21,7 +21,7 @@ const pg = new Client({
   ssl: true
 });
 */
-console.log(process.env.DATABASE_URL )
+//console.log(process.env.DATABASE_URL )
 
 
 const pg = new Client({
@@ -33,9 +33,8 @@ const pg = new Client({
 
 
 //--------------------------------------------------------------------------
-
+/*
 pg.connect();
-
 
 pg.query('SELECT * from users;', (err, result) => {
     if (err) throw err;
@@ -44,7 +43,7 @@ pg.query('SELECT * from users;', (err, result) => {
 		console.log(r)
     	pg.end();
 });
-
+*/
 
 // 現在時刻を取得
 /*
@@ -81,7 +80,27 @@ var users = require('./routes/users');
 app.use('/users', users);
 
 app.use('/testdb', (req, res) => {
-  res.send(r);
+
+  var id = req.query.id;
+  //var keyword = req.query.keyword;
+  var user = 'a';
+  //console.log( 'id: ' + id );
+  //console.log('keyword: ' + keyword);
+  
+    pg.connect();
+  
+    pg.query(`SELECT * from users where id = ${ id };`, (err, result) => {
+        if (err) throw err;
+        user = JSON.stringify(result.rows[0]);
+        //r = result.rows;
+        //console.log(user);
+        pg.end();
+    });
+  
+    res.header('Content-Type', 'application/json; charset=utf-8')
+    res.send(user);
+
+
 });
 
 app.get('/', (req, res) => {
