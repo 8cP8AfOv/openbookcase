@@ -1,0 +1,17 @@
+
+Host
+ec2-54-211-255-161.compute-1.amazonaws.com
+Database
+de90tuv7jdic7i
+User
+zxxrerpbjexjkt
+Port
+5432
+Password
+d6376ad799cd1032ad56f03dd6d2583f65fdc2a29d3f283f9e7fe69d463e2de1
+URI
+postgres://zxxrerpbjexjkt:d6376ad799cd1032ad56f03dd6d2583f65fdc2a29d3f283f9e7fe69d463e2de1@ec2-54-211-255-161.compute-1.amazonaws.com:5432/de90tuv7jdic7i
+Heroku CLI
+heroku pg:psql postgresql-silhouetted-31386 --app openbookcase
+
+
