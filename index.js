@@ -1,36 +1,32 @@
 /*-----------------------------------------------------------
 Postgres のテスト
 --------------------------------------------------------------*/
+//https://node-postgres.com/features/pooling
+
 
 var r = 'a';
+/*
 const { Client } = require('pg')
 
-/*
+
 const pg = new Client({
     user: 'postgres',
     host: '127.0.0.1',
     database: 'testdb',
     password: 'postgres',
     port: 5432,
-})
+});
+
 */
 
 /*
-const pg = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true
-});
-*/
-//console.log(process.env.DATABASE_URL )
-
-
 const pg = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
-
+*/
 
 //--------------------------------------------------------------------------
 /*
@@ -65,10 +61,16 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 var path = require('path');
 
-app.use(bodyParser.json())
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  next();
+ });
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors())
-app.use(express.static('./dist'))
+app.use(cors());
+app.use(express.static('./dist'));
 //app.use(express.static(path.join(__dirname, 'dist')));
 
 const helmet = require('helmet')
@@ -76,43 +78,31 @@ app.use(helmet())
 
 const port = process.env.PORT ||  3000; //8080;
 
+// for test
+app.use('/testdb', (req, res) => {
+  let user = 'a';
+  res.send(user);
+});
+
+// CRUD API --------------------------------------------------
 var users = require('./routes/users');
 app.use('/users', users);
 
-app.use('/testdb', (req, res) => {
+var books = require('./routes/books');
+app.use('/books', books);
 
-  var id = req.query.id;
-  //var keyword = req.query.keyword;
-  var user = 'a';
-  //console.log( 'id: ' + id );
-  //console.log('keyword: ' + keyword);
-  
-    pg.connect();
-  
-    pg.query(`SELECT * from users where id = ${ id };`, (err, result) => {
-        if (err) throw err;
-        user = JSON.stringify(result.rows[0]);
-        //r = result.rows;
-        //console.log(user);
-        pg.end();
-    });
-  
-    res.header('Content-Type', 'application/json; charset=utf-8')
-    res.send(user);
-
-
-});
+var borrowing = require('./routes/borrowing');
+app.use('/borrowing', borrowing);
+// CRUD API --------------------------------------------------
 
 app.get('/', (req, res) => {
 	res.send('Hello World !!' );
 });
 
-
 app.all('*', (req, res) => {
-	res.send('404 Not found');
+	res.redirect('/');
 });
 
 app.listen(port, () => {
 	console.log(`Start server port:${port}`);
 });
-
