@@ -2,6 +2,7 @@ const { getPostgresClient } = require('./postgres');
 
 async function myGet(q) {
     const db = await getPostgresClient();
+    //console.log('myGet q:' + JSON.stringify(q))
     let id = parseInt(q.id);
     if ( isNaN(id) ) id = 0;
     let isbn = (q.isbn) ? q.isbn : '';
@@ -35,6 +36,7 @@ async function myGet(q) {
 
 async function myPost(q) {
     const db = await getPostgresClient();
+    console.log('myPOst: ' + JSON.stringify(q))
     let id = parseInt(q.id);
     if ( isNaN(id) ) id = 0;
     let isbn = (q.isbn) ? q.isbn : '' ;    
@@ -44,7 +46,7 @@ async function myPost(q) {
     let result = 'KO' ;
     try {
         if (id) {
-            const sql = `Update books  set isbn = $1, title = $2, authors = $3, image = $4 where id = $5 ;`;
+            const sql = `Update books set isbn = $1, title = $2, authors = $3, image = $4 where id = $5 ;`;
             const params = [isbn, title, authors, image, id];
             await db.begin();
             result = await db.execute(sql, params);
@@ -103,7 +105,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-    //console.log('post: ' + req.body.isbn + ' : ' + req.body.title );
+   //console.log('Util post: ' + req.body.isbn + ' : ' + req.body.title );
     myPost(req.body)
     .then((result) => {
         console.log(result);
