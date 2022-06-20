@@ -19,14 +19,14 @@ const pg = new Client({
 
 */
 
-/*
+
 const pg = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
-*/
+
 
 //--------------------------------------------------------------------------
 /*
@@ -80,8 +80,16 @@ const port = process.env.PORT ||  3000; //8080;
 
 // for test
 app.use('/testdb', (req, res) => {
-  let user = 'a';
-  res.send(user);
+  pg.connect();
+
+pg.query('SELECT * from users;', (err, result) => {
+    if (err) throw err;
+    	r = JSON.stringify(result.rows[0]);
+      //r = result.rows;
+		//console.log(r)
+    	pg.end();
+});
+  res.send(r);
 });
 
 // CRUD API --------------------------------------------------
