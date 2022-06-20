@@ -84,7 +84,7 @@ app.use('/testdb', (req, res) => {
 
 pg.query('SELECT * from users;', (err, result) => {
     if (err) throw err;
-    	r = JSON.stringify(result.rows[0]);
+    	r = JSON.stringify(result.rows);
       //r = result.rows;
 		//console.log(r)
     	pg.end();
