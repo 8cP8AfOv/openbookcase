@@ -88,7 +88,7 @@ pg.query('SELECT * from users;', (err, result) => {
       //r = result.rows;
 		//console.log(r)
     	pg.end();
-});
+
   res.send(r);
 });
 
