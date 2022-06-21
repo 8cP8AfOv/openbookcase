@@ -13,7 +13,8 @@ async function myTest() {
           await db.begin();
           result = await db.execute(sql);
   } catch (e) {
-      throw e;
+      //throw e;
+      result = e;
   } finally {
       await db.release();
       return result;
