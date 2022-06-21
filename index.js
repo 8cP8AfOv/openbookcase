@@ -9,7 +9,7 @@ const { getPostgresClient } = require('./routes/postgres.js');
 async function myTest() {
   const db = await getPostgresClient();
   try {
-          const sql = "Select * from users ;";
+          const sql = "SELECT NOW() ;";
           await db.begin();
           result = await db.execute(sql);
   } catch (e) {
@@ -100,7 +100,7 @@ const port = process.env.PORT ||  3000; //8080;
 app.use('/testdb', (req, res) => {
   
   
-  res.send(myTest());
+  res.send(JSON.stringify(myTest()));
 });
 
 // CRUD API --------------------------------------------------
