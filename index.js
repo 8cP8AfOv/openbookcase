@@ -101,7 +101,7 @@ const port = process.env.PORT ||  3000; //8080;
 app.use('/testdb', (req, res) => {
   
   
-  res.send(JSON.stringify(myTest()));
+  res.send('test: ' + JSON.stringify(myTest()));
 });
 
 // CRUD API --------------------------------------------------
