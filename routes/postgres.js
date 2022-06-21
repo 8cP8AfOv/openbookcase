@@ -37,7 +37,7 @@ const pg = new Client({
 });
 */
 //---------------------------------------
-/*
+
 const { Pool } = require('pg');
 //const connectionString = 'postgresql://postgres:postgres@localhost:5432/testdb';
 const connectionString = 'postgres://zxxrerpbjexjkt:d6376ad799cd1032ad56f03dd6d2583f65fdc2a29d3f283f9e7fe69d463e2de1@ec2-54-211-255-161.compute-1.amazonaws.com:5432/de90tuv7jdic7i';
@@ -48,8 +48,8 @@ const pool = new Pool({
       rejectUnauthorized: false
     }
  });
-*/
 
+/*
 const Pool = require('pg-pool');
 const url = require('url')
 
@@ -66,6 +66,7 @@ const config = {
 };
 
 const pool = new Pool(config);
+*/
 
 /**
  * Postgresクラス

@@ -3,7 +3,7 @@ Postgres のテスト
 --------------------------------------------------------------*/
 //https://node-postgres.com/features/pooling
 
-
+/*
 const { getPostgresClient } = require('./routes/postgres.js');
 
 async function myTest() {
@@ -20,6 +20,7 @@ async function myTest() {
       return result;
   }
 }
+*/
 
 var r = 'a';
 /*
@@ -100,8 +101,8 @@ const port = process.env.PORT ||  3000; //8080;
 // for test
 app.use('/testdb', (req, res) => {
   
-  
-  res.send('test: ' + JSON.stringify(myTest()));
+  res.send('test');
+//  res.send('test: ' + JSON.stringify(myTest()));
 });
 
 // CRUD API --------------------------------------------------
