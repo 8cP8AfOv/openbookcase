@@ -4,12 +4,12 @@ Postgres のテスト
 //https://node-postgres.com/features/pooling
 
 
-const { getPostgresClient } = require('./routes/postgres');
+const { getPostgresClient } = require('./routes/postgres.js');
 
 async function myTest() {
   const db = await getPostgresClient();
   try {
-          const sql = `Select * from users ;`;
+          const sql = "Select * from users ;";
           await db.begin();
           result = await db.execute(sql);
   } catch (e) {
