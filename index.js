@@ -4,6 +4,22 @@ Postgres のテスト
 //https://node-postgres.com/features/pooling
 
 
+const { getPostgresClient } = require('./routes/postgres');
+
+async function myTest() {
+  const db = await getPostgresClient();
+  try {
+          const sql = `Select * from users ;`;
+          await db.begin();
+          result = await db.execute(sql);
+  } catch (e) {
+      throw e;
+  } finally {
+      await db.release();
+      return result;
+  }
+}
+
 var r = 'a';
 /*
 const { Client } = require('pg')
@@ -84,7 +100,7 @@ const port = process.env.PORT ||  3000; //8080;
 app.use('/testdb', (req, res) => {
   
   
-  res.send(r);
+  res.send(myTest());
 });
 
 // CRUD API --------------------------------------------------
