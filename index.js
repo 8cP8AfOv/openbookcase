@@ -70,7 +70,7 @@ pg.query('SELECT NOW()', (err, res) => {
   pg.end();
 });
 */
-
+/*
 const { Pool } = require('pg');
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -78,7 +78,7 @@ const pool = new Pool({
     rejectUnauthorized: false
   }
 });
-
+*/
 
 
 //--------------------------------------------------------------------------
@@ -110,6 +110,8 @@ const port = process.env.PORT ||  3000; //8080;
 
 // for test
 app.use('/testdb', async (req, res) => {
+  res.send('testdb')
+  /*
     try {
       const client = await pool.connect()
       const result = await client.query('SELECT * FROM users; ');
@@ -121,6 +123,7 @@ app.use('/testdb', async (req, res) => {
       console.error(err);
       res.send("Error " + err);
     }
+    */
   })
 
 
