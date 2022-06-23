@@ -44,12 +44,12 @@ const pg = new Client({
     rejectUnauthorized: false
   }
 });
-*/
+
 
 //--------------------------------------------------------------------------
-/*
-pg.connect();
 
+//pg.connect();
+/*
 pg.query('SELECT * from users;', (err, result) => {
     if (err) throw err;
     	r = JSON.stringify(result.rows[0]);
@@ -70,6 +70,16 @@ pg.query('SELECT NOW()', (err, res) => {
   pg.end();
 });
 */
+
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+
 
 //--------------------------------------------------------------------------
 
@@ -99,11 +109,23 @@ app.use(helmet())
 const port = process.env.PORT ||  3000; //8080;
 
 // for test
-app.use('/testdb', (req, res) => {
-  
-  res.send('test');
-//  res.send('test: ' + JSON.stringify(myTest()));
-});
+app.use('/testdb', async (req, res) => {
+    try {
+      const client = await pool.connect()
+      const result = await client.query('SELECT * FROM users; ');
+      const results = { 'results': (result) ? result.rows : null};
+      res.send(result.rows);
+      //  res.send('test: ' + JSON.stringify(myTest()));
+      
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+  })
+
+
+
+
 
 // CRUD API --------------------------------------------------
 var users = require('./routes/users');
