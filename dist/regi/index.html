@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja"></html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS main</title>    
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/vuetify@3.0.0-beta.3/dist/vuetify.css" rel="stylesheet">
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+    <link href="./common.css" rel="stylesheet">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        
+        <v-container>
+            <v-row>
+                <v-spacer></v-spacer>
+                <v-col cols="8">
+                    <span v-if="msg"><strong class="text-blue-darken-2 pa-3">暗証番号、入力するぞなもし</strong></span>
+                    <span v-else><strong class="text-red-lighten-1 pa-3">番号ちがうわい！</strong></span>
+                </v-col>
+                <v-spacer></v-spacer>
+            </v-row>           
+            <v-row>
+                <v-spacer></v-spacer>
+                <v-col cols="8">
+                <v-text-field
+                    v-model="pw"
+                    label=""
+                    :append-icon="show_pass ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="show_pass ? 'text' : 'password'"
+                    @click:append="show_pass = !show_pass"
+                ></v-text-field>
+                </v-col>
+                <v-spacer></v-spacer>
+            </v-row>
+            <v-row>
+                <v-spacer></v-spacer>
+                <v-col cols="8">
+                    <v-row dense v-for="(tenKeyRow, i) in tenKey" :key="i">
+                        <v-col dense v-for="digit in tenKeyRow">
+                            <v-btn v-if="digit!=''" size="large" variant="outlined" @click="inputDigit(digit)">{{ digit }}</v-btn>
+                            <v-spacer v-else></v-spacer>
+                        </v-col>
+                    </v-row>
+                </v-col>
+                <v-spacer></v-spacer>
+            </v-row>
+        </v-container>
+
+    </div>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vuetify@3.0.0-beta.3/dist/vuetify.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>

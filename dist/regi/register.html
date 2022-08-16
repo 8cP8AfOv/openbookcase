@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS main</title>
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/vuetify@3.0.0-beta.3/dist/vuetify.css" rel="stylesheet">
+    <link href="./common.css" rel="stylesheet">
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+    <style>
+.panel {
+  background: #eee;
+  padding: 18px;
+  transform-origin: 0 0;
+}
+
+/* Animation */
+.slide-enter-active, .slide-leave-active {
+  transition: .5s;
+}
+.slide-enter, .slide-leave-to {
+  transform: scaleY(0);
+}
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+
+        <v-container>
+            <v-row align-content="center">
+                <v-col cols="2">
+                    <v-btn icon color="primary" @click="goToManage"><v-icon x-large>mdi-dots-horizontal</v-icon></v-btn>
+                </v-col>
+                <v-col cols="8">
+                    <v-card tonal class="text-center">
+                        <v-card-title >
+                            <v-row align-content="center">
+                                <v-spacer></v-spacer>
+                                <v-col cols="8"><span @click="showClientFinder">{{ client.name  }} ({{ client.code }})</span> : <span class="text-subtitle-1" @click="openARList">未収{{ applicable_receivables.length }}件
+                                
+<button v-show="applicable_receivables.length > 0" icon><v-icon x-large>{{ ar_list_icon }}</v-icon></button></span>
+                                </v-col>
+                                <v-spacer></v-spacer>
+                            </v-row>
+                        </v-card-title>
+
+
+
+
+
+<transition name="slide">
+<div v-if="show_ar_list" class="panel">
+                        <v-card-text v-show="applicable_receivables.length != 0">
+                            <v-row align-content="center">
+                                <v-spacer></v-spacer>
+                                <v-col cols="8">
+                                    <table>
+                                        <tr>
+                                            <th class="text-left">日付</th>
+                                            <th class="text-left">種別</th>
+                                            <th class="text-right">金額</tr>
+                                        </tr>
+                                        <tr v-for="r in applicable_receivables" :key="r.id" @click="addToCart(r.id)">
+                                            <td>{{ r.date }}</td></td><td>{{ r.subject }}</td><td class="text-right">{{ r.amount.toLocaleString() }}</td>
+                                        </tr>
+                                    </table>
+                                </v-col>
+                                <v-spacer></v-spacer>
+                            </v-row>
+                        </v-card-text>
+
+</div>
+</transition>
+
+                    </v-card>
+
+                </v-col>
+                <v-col cols="2">
+                    <v-spacer></v-spacer>
+                    <v-btn icon color="primary" @click="logout"><v-icon x-large>mdi-logout</v-icon></v-btn>
+                </v-col>
+            </v-row>            
+            <v-row align-content="center">
+                <v-spacer></v-spacer>
+                <v-col cols="6" sm="3" align-content="center">
+                    <v-text-field
+                    v-model="jan"
+                    label="商品コード"
+                    ></v-text-field>
+                </v-col>
+                <v-spacer></v-spacer>
+            </v-row>
+            <v-row align-content="center" v-show="cart.length > 0">
+                <v-spacer></v-spacer>
+                <v-col cols="6" sm="3">
+                    <v-list>
+                        <v-list-item v-for="(item, i) in cart" :key="i">
+                            {{ item.jan }} - {{ item.category }} - {{ item.subject }} - {{ item.quantity }} - {{ item.price }}
+
+                        </v-list-item>
+                    </v-list>
+                    小計: {{ subtotal }}
+                </v-col>
+                <v-spacer></v-spacer>
+            </v-row>           
+            <v-divider ></v-divider>
+            <v-row align-content="center">
+                <v-spacer></v-spacer>
+                <v-col cols="1">
+                <v-subheader>預かり</v-subheader>
+            </v-col>
+                <v-col cols="8" sm="4">
+            <v-text-field readonly prefix="¥">{{ recieved_amount }}</v-text-field>
+                </v-col>
+                <v-col cols="1">
+            <button icon @click="openTenKey"><v-icon x-large>{{ tenkey_icon }}</v-icon></button>
+                </v-col>
+                <v-spacer></v-spacer>
+            </v-row>  
+            <v-row><v-col>
+            <transition name="slide">
+                <div v-if="show_tenkey" class="panel">
+                    <v-container dense>
+                        <v-row v-for="(d_row, i) in tenKey" :key="i">
+                            <v-col v-for="(d_col, j) in d_row" :key="j">
+                                <v-btn @click="addDigit(d_col)">{{ d_col }}</v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </div>
+            </transition>
+
+        </v-col></v-row>
+
+
+  
+    <v-row align-content="center">
+        <v-spacer></v-spacer>
+        <v-col cols="1">
+        <v-subheader>お釣り</v-subheader>
+    </v-col>
+        <v-col cols="6" sm="3">
+    <v-text-field readonly>{{ rest }}</v-text-field>
+</v-col>
+<v-spacer></v-spacer>
+</v-row>    
+        </v-container>
+
+        <!-- client finder window start -->
+        <v-dialog v-model="clientFinder" align-content="center" scrollable>
+            <v-card class="text-center">
+                <v-container>
+                    <v-row>
+                        <v-spacer></v-spacer>
+                        <v-col cols="6" sm="3">
+                            <v-text-field v-model="kanaName" readonly variant="outlined"></v-text-field>
+                            <v-list>
+                                <v-list-item
+                                v-for="(client, i) in candidates"
+                                :key="i"
+                                :title="client.name"
+                                :value="client.id"
+                                rounded="xl"
+                                @click="setClient(client.id)"
+                            >
+                            </v-list>
+                        </v-col>
+                        <v-col>
+                            <v-btn icon @click="clearKanaName"><v-icon color="red" x-large>mdi-close-thick</v-icon></v-btn>
+                        </v-col>
+                        <v-spacer></v-spacer>
+                    </v-row>
+                    <v-divider></v-divider>
+                    <!-- keybord start -->
+                    <v-row dense v-for="(kanaRow, i) in kanaTable1" :key="i">
+                        <v-col v-for="kana in kanaRow">
+                            <v-btn v-if="kana!=''" size="small" variant="outlined" @click="inputKana(kana)" >{{ kana }}</v-btn>
+                            <v-spacer v-else></v-spacer>
+                        </v-col>
+                    </v-row>
+                    <v-row dense v-for="(kanaRow, i) in kanaTable2" :key="i">
+                        <v-col v-for="kana in kanaRow" @click="inputKana(kana)" style="margin:none;padding:none;border:none;">
+                            <v-btn v-if="kana!=''" size="small" variant="outlined">{{ kana }}</v-btn>
+                            <v-span v-else>&nbsp;</v-span>
+                        </v-col>
+                    </v-row>
+                </v-container>
+                <!-- keybord end -->
+
+                <v-card-actions>
+                    <v-btn color="primary" block @click="clientFinder = false">閉じる</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <!-- client finder window end -->        
+
+    </div>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vuetify@3.0.0-beta.3/dist/vuetify.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-simple-search-dropdown@1.0.1/dist/vue-simple-search-dropdown.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-simple-search-dropdown@1.0.1/dist/vue-simple-search-dropdown.min.js"></script>
+
+    <script src="./register.js"></script>    
+</body>
+</html>

@@ -1,0 +1,7 @@
+body {
+    background-color:#ffebcd;
+}
+th,td {
+    padding: 10px;      /* 余白指定 */
+}
+
