@@ -37,7 +37,7 @@
         <v-container>
             <v-row align-content="center">
                 <v-col cols="2">
-                    <v-btn icon color="primary" @click="goToManage"><v-icon x-large>mdi-dots-horizontal</v-icon></v-btn>
+                    <v-btn icon color="primary" @click="go_to_manage"><v-icon x-large>mdi-dots-horizontal</v-icon></v-btn>
                 </v-col>
                 <v-col cols="8">
                     <v-card tonal class="text-center">
@@ -69,7 +69,7 @@
                                             <th class="text-right">金額</tr>
                                         </tr>
                                         <tr v-for="r in applicable_receivables" :key="r.id" @click="addToCart(r.id)">
-                                            <td>{{ r.date }}</td></td><td>{{ r.subject }}</td><td class="text-right">{{ r.amount.toLocaleString() }}</td>
+                                            <td>{{ r.date }}</td></td><td>{{ r.category }}</td><td class="text-right">{{ r.amount.toLocaleString() }}</td>
                                         </tr>
                                     </table>
                                 </v-col>
@@ -92,7 +92,7 @@
                 <v-spacer></v-spacer>
                 <v-col cols="6" sm="3" align-content="center">
                     <v-text-field
-                    v-model="jan"
+                    v-model="product_code"
                     label="商品コード"
                     ></v-text-field>
                 </v-col>
@@ -103,7 +103,8 @@
                 <v-col cols="6" sm="3">
                     <v-list>
                         <v-list-item v-for="(item, i) in cart" :key="i">
-                            {{ item.jan }} - {{ item.category }} - {{ item.subject }} - {{ item.quantity }} - {{ item.price }}
+
+                            {{ item.category }}:{{ item.detail }} / @{{ item.amount }} x {{ item.quantity }} = {{ item.amount * item.quantity }}
 
                         </v-list-item>
                     </v-list>
@@ -126,7 +127,9 @@
                 <v-spacer></v-spacer>
             </v-row>  
             <v-row><v-col>
-            <transition name="slide">
+            
+                <!-- ten key -->
+                <transition name="slide">
                 <div v-if="show_tenkey" class="panel">
                     <v-container dense>
                         <v-row v-for="(d_row, i) in tenKey" :key="i">
@@ -180,13 +183,13 @@
                     </v-row>
                     <v-divider></v-divider>
                     <!-- keybord start -->
-                    <v-row dense v-for="(kanaRow, i) in kanaTable1" :key="i">
+                    <v-row dense v-for="(kanaRow, i) in kana_table1" :key="i">
                         <v-col v-for="kana in kanaRow">
                             <v-btn v-if="kana!=''" size="small" variant="outlined" @click="inputKana(kana)" >{{ kana }}</v-btn>
                             <v-spacer v-else></v-spacer>
                         </v-col>
                     </v-row>
-                    <v-row dense v-for="(kanaRow, i) in kanaTable2" :key="i">
+                    <v-row dense v-for="(kanaRow, i) in kana_table2" :key="i">
                         <v-col v-for="kana in kanaRow" @click="inputKana(kana)" style="margin:none;padding:none;border:none;">
                             <v-btn v-if="kana!=''" size="small" variant="outlined">{{ kana }}</v-btn>
                             <v-span v-else>&nbsp;</v-span>
@@ -207,7 +210,8 @@
     <script src="https://unpkg.com/vuetify@3.0.0-beta.3/dist/vuetify.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-simple-search-dropdown@1.0.1/dist/vue-simple-search-dropdown.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-simple-search-dropdown@1.0.1/dist/vue-simple-search-dropdown.min.js"></script>
-
+    <script src="./common.js"></script>
+    <script src="./db.js"></script>
     <script src="./register.js"></script>    
 </body>
 </html>

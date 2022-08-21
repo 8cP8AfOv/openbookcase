@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja"></html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS main</title>    
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/vuetify@3.0.0-beta.3/dist/vuetify.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@vuepic/vue-datepicker@latest/dist/main.css">
+
+    <link href="./common.css" rel="stylesheet">
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <v-container >
+            <v-row>
+                <v-col cols="2" justify="start">
+                    <v-btn icon color="primary" @click="go_to_register"><v-icon x-large>mdi-calculator-variant</v-icon></v-btn>
+                </v-col>
+                <v-col cols="8" justify="center">
+                    <v-tabs v-model="tab" color="deep-purple-accent-4" >
+                        <v-tab value="1">履歴</v-tab>
+                        <v-tab value="2">商品の登録</v-tab>
+                        <v-tab value="3">商品の変更</v-tab>
+                        <v-tab value="4">使い方</v-tab>
+                    </v-tabs>
+                </v-col>
+                <v-col cols="2" justify="end">
+                    <v-btn icon color="primary" @click="logout"><v-icon x-large>mdi-logout</v-icon></v-btn>
+                </v-col>
+            </v-row>
+        </v-container>
+        <v-container>
+            <v-row justify="center">
+                <v-col cols="11" justify="center">
+                    <v-window v-model="tab">
+
+                        <!-- 1' panel start --------------------------------------------->
+                        <v-window-item value="1">
+                            <p class="text-h4 text-center">物販・未収金受け取りの履歴</p>
+
+                            <v-container>
+                                <v-row justify="center">
+                                <v-col cols="2">
+                                期間：<!-- Datepicker v-model="date" / -->
+                                </v-col>
+                                <v-col cols="4"><v-text-field></v-text-field></v-col>
+                                <v-col cols="1"> 〜 </v-col>
+                                <v-col cols="4"><v-text-field></v-text-field></v-col>
+                                <v-col cols="1">&nbsp;</v-col>
+                                </v-row>
+                                <v-row >
+                                <v-col cols="2">種別：</v-col>
+                                <v-col cols="8">
+                                <v-checkbox color="primary" label="物販" hide-details></v-checkbox>
+                                <v-checkbox color="primary" label="ガス" hide-details></v-checkbox>
+                                <v-checkbox color="primary" label="内装" hide-details></v-checkbox>
+                                <v-checkbox color="primary" label="太陽光発電" hide-details></v-checkbox>
+                                </v-col>
+                                <v-col cols="2">&nbsp;</v-col>
+                                </v-row>
+                            </v-container>
+
+                        </v-window-item>
+                        <!-- 1' panel end --------------------------------------------->
+                        <!-- 2' panel start --------------------------------------------->
+                        <v-window-item value="2">
+                            <p class="text-h4 text-center">商品の登録</p>
+
+                            <v-container>
+                                <v-row dense justify="center">
+                                <v-col dense cols="2">
+                                    <v-text-field label="番号" v-model="code"></v-text-field>
+                                </v-col>
+                                <v-col dense cols="2">
+                                    <v-select
+                                    :items="categories"
+                                    label="分類"
+                                    v-model="category"
+                                  ></v-select>
+                                </v-col>
+                                <v-col dense cols="8"><v-text-field label="メーカー" v-model="maker"></v-text-field></v-col>
+                                </v-row>
+                                <v-row>
+                                <v-col dense cols="8"><v-text-field label="商品名" v-model="name"></v-text-field></v-col>
+                                <v-col dense cols="3"><v-text-field label="値段" v-model="price"></v-text-field></v-col>
+                                <v-col dense cols="1"><v-btn icon color="primary" @click="add_product"><v-icon color="primay" seize="large">mdi-content-save</v-icon></v-btn></v-col>
+                                </v-row>
+                                
+                            </v-container>
+
+                        </v-window-item>
+                        <!-- 2' panel end --------------------------------------------->
+                        <!-- 3' panel start --------------------------------------------->
+                        <v-window-item value="3">
+                            <p class="text-h4 text-center">商品の変更</p>
+                            作成中
+                            
+
+
+
+                        </v-window-item>
+                        <!-- 3' panel start ----------------------------------------->                        
+                        <!-- 4' panel start --------------------------------------------->
+                        <v-window-item value="4">
+                            <p class="text-h4 text-center">このソフトの使い方</p>
+                            作成中
+                            
+
+
+
+                        </v-window-item>
+                         <!-- 4' panel start --------------------------------------------->
+
+                    </v-window>   
+                </v-col>         
+            </v-row>
+        </v-container>
+
+    </div>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vuetify@3.0.0-beta.3/dist/vuetify.js"></script>
+    <!-- https://vue3datepicker.com/installation/#browser -->
+    <!-- https://blog.amayz.co.jp/?p=696 -->
+    <script src="https://unpkg.com/@vuepic/vue-datepicker@latest"></script>
+    <script src="./common.js"></script>
+    <script src="./db.js"></script>
+    <script src="management.js"></script>
+</body>
+</html>

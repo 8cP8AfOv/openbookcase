@@ -1,58 +1,23 @@
 const myapp = {
   data() {
     return {
-
-      // const start ------------------------------------------------------------
-      kanaTable1: [
-        ['ん','わ','ら','や','ま','は','な','た','さ','か','あ'],
-        ['','','り','','み','ひ','に','ち','し','き','い'],                    
-        ['','','る','ゆ','む','ふ','ぬ','つ','す','く','う'],
-        ['','','れ','','め','へ','ね','て','せ','け','え'],
-        ['','を','ろ','よ','も','ほ','の','と','そ','こ','お']
-      ],
-      kanaTable2: [
-        ['ー','ゃ','','','ば','だ','ざ','が'],
-        ['','','','','び','ぢ','じ','ぎ'],                    
-        ['','ゅ','っ','','ぶ','づ','ず','ぐ'],
-        ['','','','','べ','で','ぜ','げ'],
-        ['','ょ','','','ぼ','ど','ぞ','ご']        
-      ],
-      tenKey: [
-        ['7','8','9'],
-        ['4','5','6'],
-        ['1','2','3'],
-        ['0','00','000']
-      ],
-      // const end ------------------------------------------------------------
-
-      // DB start -------------------------------------------------------------------------------
-      clients: [
-        {'id':1, 'code':'9999', 'name':'一般のお客様', 'kanaName':''},
-        {'id':2, 'code':'1111', 'name':'山田春子', 'kanaName':'やまだはるこ'},
-        {'id':3, 'code':'2222', 'name':'田中夏彦', 'kanaName':'たなかなつひこ'},
-        {'id':4, 'code':'3333', 'name':'佐藤秋子', 'kanaName':'さとうあきこ'},
-        {'id':5, 'code':'4444', 'name':'鈴木冬彦', 'kanaName':'すずきふゆひこ'},
-        {'id':6, 'code':'5555', 'name':'山本一郎', 'kanaName':'やまもといちろう'},
-      ],
-      receivables: [
-        {'id':1, 'client_id':3, 'amount':15000, 'date':'2022-7-21', 'received_date':null, 'subject':'内装', 'detail':'詳細'},
-        {'id':2, 'client_id':2, 'amount':20000, 'date':'2022-8-3', 'received_date':null, 'subject':'太陽光発電', 'detail':'詳細'},
-        {'id':3, 'client_id':2, 'amount':30000, 'date':'2022-8-10', 'received_date':null, 'subject':'太陽光発電', 'detail':'詳細'},
-        {'id':4, 'client_id':2, 'amount':5000, 'date':'2022-8-16', 'received_date':null, 'subject':'ガス', 'detail':'詳細'},
-      ],
-      products: [
-        {'id':1, 'jan':'4902621004589', 'name':'バランスパワーBIG ブラックカカオ', 'maker': 'ハマダコンフェクト', 'category':'その他の食品・嗜好品', 'price':'110'},
-        {'id':2, 'jan':'4549741893909', 'name':'フルーツブロック', 'maker': 'イオン', 'category':'加工食品', 'price':'98'},
-      ],
-      cashIncome: [
-        {'id':0, 'date':'', 'client_id':'9999', 'amount':0, 'receivables_id':'0'},
-      ],
-      cart: [ //{'jan': '', 'category': '', 'subject': '', 'quantity': 0, 'price': 0 },
-      ],
-      // DB end -------------------------------------------------------------------------------
+      // DB -------------------------------------------------------------------------------
+      clients: [],
+      receivables: [],
+      products: [],
+      income: [],
+      cart: [],
+      // DB -------------------------------------------------------------------------------
+      // common ---------------------------------------------------------------------------
+      tenKey: [],
+      kana_table1: [],
+      kana_table2: [],
+      
+      // common ---------------------------------------------------------------------------
 
 
-      jan: '',
+
+      product_code: '',
       clientFinder: false,
       kanaName: '',
       selected: { name: null, id: null },
@@ -64,25 +29,43 @@ const myapp = {
       show_ar_list: false,
       ar_list_icon: 'mdi-triangle-small-down',
       show_tenkey: false,
+  
       tenkey_icon: 'mdi-triangle-small-down',
       recieved_amount: '',
       rest: 0,
     };
   },
   mounted(){
-    this.cilent = this.clients[0]
+    // read data from local strage ----------------------------------------------
+    const db = ini_strage()
+    this.clients = db['clients']
+    this.receivables = db['receivables']
+    this.products = db['products']
+    this.income = db['income']
+    this.cart = db['cart']
+
+    this.tenKey = TENKEY
+    this.kana_table1 = KANATABLE1
+    this.kana_table2 = KANATABLE2
+
   },
+
   watch: {
-    jan: 'getProduct',
+    product_code: 'getProduct',
     kanaName: 'getCandidates',
   },
   computed: {
-
   },
   methods:{
+    //--------------------------------------------
     logout() {
       window.location.href = './index.html'
     },
+    go_to_manage(){
+      window.location.href = './management.html'
+    },
+    //--------------------------------------------
+
 
     clearKanaName() {
       this.kanaName = ''
@@ -105,12 +88,12 @@ const myapp = {
     },
 
     getProduct(){
-      if (this.jan.length !== 13) return;
-      const target = this.products.find((p) => p.jan === this.jan)
+      if (this.product_code.length !== 6) return
+      let target = this.products.find((p) => p.code == this.product_code)
 
-      var new_item = { 'jan': target.jan, 'category': '物販', 'subject': target.name, 'quantity': 1, 'price': target.price }
+      var new_item = { 'date': '2022-8-1', 'client_id': this.client.id, 'amount': target.price, 'type': 'products', 'item_id': target.id, 'category': target.category, 'detail': '(' + target.code + ')' + target.name, 'quantity': 1}
       this.cart.push(new_item)
-      this.subtotal += (new_item.price * 1)
+      this.subtotal += (new_item.amount * new_item.quantity)
 
     },
     getCandidates(){
@@ -119,13 +102,11 @@ const myapp = {
     },
     addToCart(receivable_id) {
       var target = this.applicable_receivables.find((r) => r.id == receivable_id )
-      var new_item = { 'jan': '', 'category': target.subject, 'subject': '', 'quantity': 1, 'price': target.amount }
+      var new_item = { 'date': target.date, 'client_id': target.client_id, 'amount': target.amount, 'type': 'receivables', 'item_id': target.id, 'category': target.category, 'detail': target.detail, 'quantity': 1}
       this.cart.push(new_item)
-      this.subtotal += (new_item.price * 1)
+      this.subtotal += (new_item.amount * new_item.quantity)
     },
-    goToManage(){
-      window.location.href = './manage.html'
-    },
+
 
 
     openARList() {

@@ -17,6 +17,9 @@ vuetify = Vuetify.createVuetify({
 });
 */
 
+
+
+
 const myapp = {
   data() {
     return {
@@ -32,10 +35,19 @@ const myapp = {
       ],      
     };
   },
+  mounted(){
+
+  },
   watch: {
     pw: 'checkPW'
   },
   methods:{
+    date_clear() {
+      const isDeleted = 'Are you sure to delete all date ?'
+      if (window.confirm(isDeleted)) {
+        delete_strage();
+      }
+    },
     inputDigit(digit){
       this.pw += digit
     },

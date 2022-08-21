@@ -23,6 +23,11 @@
         <v-container>
             <v-row>
                 <v-spacer></v-spacer>
+                 <v-col cols="8"><v-btn color="warning" size="small" @click="date_clear">データ消去</v-btn></v-col>
+                 <v-spacer></v-spacer>
+            </v-row>
+            <v-row>
+                <v-spacer></v-spacer>
                 <v-col cols="8">
                     <span v-if="msg"><strong class="text-blue-darken-2 pa-3">暗証番号、入力するぞなもし</strong></span>
                     <span v-else><strong class="text-red-lighten-1 pa-3">番号ちがうわい！</strong></span>
@@ -59,6 +64,8 @@
     </div>
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/vuetify@3.0.0-beta.3/dist/vuetify.js"></script>
-    <script src="index.js"></script>
+    <script src="./common.js"></script>
+    <script src="./db.js"></script>
+    <script src="./index.js"></script>
 </body>
 </html>
