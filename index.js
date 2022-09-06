@@ -1,87 +1,3 @@
-/*-----------------------------------------------------------
-Postgres のテスト
---------------------------------------------------------------*/
-//https://node-postgres.com/features/pooling
-
-/*
-const { getPostgresClient } = require('./routes/postgres.js');
-
-async function myTest() {
-  const db = await getPostgresClient();
-  try {
-          const sql = "SELECT NOW() ;";
-          await db.begin();
-          result = await db.execute(sql);
-  } catch (e) {
-      //throw e;
-      result = e;
-  } finally {
-      await db.release();
-      return result;
-  }
-}
-*/
-
-var r = 'a';
-/*
-const { Client } = require('pg')
-
-
-const pg = new Client({
-    user: 'postgres',
-    host: '127.0.0.1',
-    database: 'testdb',
-    password: 'postgres',
-    port: 5432,
-});
-
-*/
-
-/*
-const pg = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
-
-
-//--------------------------------------------------------------------------
-
-//pg.connect();
-/*
-pg.query('SELECT * from users;', (err, result) => {
-    if (err) throw err;
-    	r = JSON.stringify(result.rows[0]);
-      //r = result.rows;
-		console.log(r)
-    	pg.end();
-});
-*/
-
-// 現在時刻を取得
-/*
-pg.query('SELECT NOW()', (err, res) => {
-  if (err) throw err;
-  for (let row of res.rows) {
-		r = JSON.stringify(row);
-  };
-  // 接続終了
-  pg.end();
-});
-*/
-/*
-const { Pool } = require('pg');
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
-*/
-
-
-//--------------------------------------------------------------------------
 
 var express = require('express');
 var app = express();
@@ -89,46 +5,15 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 var path = require('path');
 
-/*
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  next();
- });
-*/
- app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.static('./dist'));
-//app.use(express.static(path.join(__dirname, 'dist')));
 
 const helmet = require('helmet')
 app.use(helmet())
 
 const port = process.env.PORT ||  3000; //8080;
-
-// for test
-app.use('/testdb', async (req, res) => {
-  res.send('testdb')
-  /*
-    try {
-      const client = await pool.connect()
-      const result = await client.query('SELECT * FROM users; ');
-      const results = { 'results': (result) ? result.rows : null};
-      res.send(result.rows);
-      //  res.send('test: ' + JSON.stringify(myTest()));
-      
-    } catch (err) {
-      console.error(err);
-      res.send("Error " + err);
-    }
-    */
-  })
-
-
-
-
 
 // CRUD API --------------------------------------------------
 var users = require('./routes/users');
